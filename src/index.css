@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ivory: #F8F7F2;
+  --color-forest: #183D36;
+  --color-lime: #C6F27A;
+  --color-mint: #E5F6ED;
+  --color-ink: #1A2824;
+  --color-white: #FFFFFF;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-ui: 'Manrope', system-ui, sans-serif;
+
+  --radius-card: 20px;
+  --spacing-mobile-gutter: 20px;
+  --min-height-cta: 56px;
+  --duration-screen: 200ms;
+}
+
+@font-face {
+  font-family: 'Fraunces';
+  src: local('Fraunces'), url('https://fonts.gstatic.com/s/fraunces/v25/J7aRnpdM9KnMyOMeNmySZqPsvCIR.woff2') format('woff2');
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: local('Manrope'), url('https://fonts.gstatic.com/s/manrope/v13/xn74YH90 Roller.woff2') format('woff2');
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background-color: var(--color-ivory);
+  color: var(--color-ink);
+  font-family: var(--font-ui);
+  line-height: 1.5;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-lime);
+  outline-offset: 2px;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .tap-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .cta-button {
+    min-height: 56px;
+  }
+
+  .card-radius {
+    border-radius: var(--radius-card);
+  }
+
+  .mobile-gutter {
+    padding-left: var(--spacing-mobile-gutter);
+    padding-right: var(--spacing-mobile-gutter);
+  }
+
+  .screen-transition {
+    transition: opacity var(--duration-screen) ease, transform var(--duration-screen) ease;
+  }
+}
