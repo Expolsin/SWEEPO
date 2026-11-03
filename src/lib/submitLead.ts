@@ -23,40 +23,47 @@ export interface SubmitResult {
 }
 
 /**
- * Submit lead to backend.
- *
- * INTEGRATION POINT: Replace this with actual backend call.
- *
- * For production, configure one of:
- * - Netlify Forms (add data-netlify="true" to form)
- * - Formspree / FormSubmit / similar
- * - Custom API endpoint
- * - EmailJS or similar client-side email service
- *
- * LAUNCH BLOCKED until this is connected to a real delivery mechanism.
- * This function currently always returns a blocked error.
+ * Submit a cleaning request using Netlify Forms.
+ * Netlify detects the static HTML blueprint in index.html at deployment time.
+ * A successful server response is required before showing the thank-you screen.
  */
-export async function submitLead(_data: LeadData): Promise<SubmitResult> {
-  // TODO: Replace with real submission
-  // Example for Netlify Forms:
-  // const formData = new FormData();
-  // Object.entries(data).forEach(([key, value]) => formData.append(key, String(value)));
-  // const response = await fetch('/', { method: 'POST', body: formData });
-  // return response.ok ? { success: true } : { success: false, error: 'Submission failed' };
+export async function submitLead(data: LeadData): Promise<SubmitResult> {
+  // Vite's local dev server does not process Netlify Forms, so never
+  // falsely report success when testing without a deployed Netlify site.
+  if (import.meta.env.DEV || ['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+    return {
+      success: false,
+      error: 'Odesílání poptávek lze otestovat až na zveřejněném webu Netlify.',
+    };
+  }
 
-  // Example for Formspree:
-  // const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify(data),
-  // });
-  // return response.ok ? { success: true } : { success: false, error: 'Submission failed' };
+  const payload = new URLSearchParams({
+    'form-name': 'cleanify-inquiry',
+    ...Object.fromEntries(
+      Object.entries(data).map(([key, value]) => [key, String(value)])
+    ),
+    'bot-field': '',
+  });
 
-  // LAUNCH BLOCKED: No backend configured
-  return {
-    success: false,
-    error:
-      'Systém pro příjem poptávek není zatím nakonfigurován. ' +
-      'Prosím, kontaktujte nás telefonicky nebo zkuste to později.',
-  };
+  try {
+    const response = await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: payload.toString(),
+    });
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: 'Poptávku se nepodařilo doručit. Zkuste to prosím znovu.',
+      };
+    }
+
+    return { success: true };
+  } catch {
+    return {
+      success: false,
+      error: 'Spojení se nezdařilo. Zkontrolujte internet a zkuste to znovu.',
+    };
+  }
 }
