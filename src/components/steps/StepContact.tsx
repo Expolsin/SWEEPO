@@ -86,7 +86,7 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto pr-2 mb-6" noValidate>
+        <form onSubmit={handleSubmit} id="contact-form" className="flex-1 overflow-y-auto pr-2 mb-6" noValidate>
           <div className="space-y-4">
             {/* Name */}
             <div>
@@ -275,7 +275,6 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
           <button
             type="submit"
             form="contact-form"
-            onClick={onSubmit}
             disabled={isSubmitting}
             className="w-full cta-button font-ui font-semibold text-lg rounded-card tap-target transition-all duration-200 active:scale-[0.98] focus-visible:outline-lime focus-visible:outline-3 focus-visible:outline-offset-2 ${
               isSubmitting

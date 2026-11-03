@@ -26,7 +26,6 @@ export interface SubmitResult {
  * Submit lead to backend.
  *
  * INTEGRATION POINT: Replace this with actual backend call.
- * Current implementation logs to console and simulates success.
  *
  * For production, configure one of:
  * - Netlify Forms (add data-netlify="true" to form)
@@ -35,13 +34,9 @@ export interface SubmitResult {
  * - EmailJS or similar client-side email service
  *
  * LAUNCH BLOCKED until this is connected to a real delivery mechanism.
+ * This function currently always returns a blocked error.
  */
-export async function submitLead(data: LeadData): Promise<SubmitResult> {
-  console.log('[Lead Submission] Submitting lead:', data);
-
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-
+export async function submitLead(_data: LeadData): Promise<SubmitResult> {
   // TODO: Replace with real submission
   // Example for Netlify Forms:
   // const formData = new FormData();
@@ -57,16 +52,11 @@ export async function submitLead(data: LeadData): Promise<SubmitResult> {
   // });
   // return response.ok ? { success: true } : { success: false, error: 'Submission failed' };
 
-  // For now, simulate success but log warning
-  console.warn(
-    '[LAUNCH BLOCKED] Lead submission is not connected to a real backend. ' +
-    'Configure submitLead() in src/lib/submitLead.ts with a real delivery mechanism.'
-  );
-
-  // Simulate occasional failure for testing error state
-  if (Math.random() < 0.1) {
-    return { success: false, error: 'Odeslání se nezdařilo. Zkuste to prosím znovu nebo nás kontaktujte telefonicky.' };
-  }
-
-  return { success: true };
+  // LAUNCH BLOCKED: No backend configured
+  return {
+    success: false,
+    error:
+      'Systém pro příjem poptávek není zatím nakonfigurován. ' +
+      'Prosím, kontaktujte nás telefonicky nebo zkuste to později.',
+  };
 }
