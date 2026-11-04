@@ -86,14 +86,14 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
         </div>
 
         {/* Netlify Forms hidden form for detection */}
-        <form name="contact" data-netlify="true" netlify-honeypot="bot-field" className="hidden" aria-hidden="true">
-          <input type="hidden" name="form-name" value="contact" />
+        <form name="cleanify-inquiry" data-netlify="true" netlify-honeypot="bot-field" className="hidden" aria-hidden="true">
+          <input type="hidden" name="form-name" value="cleanify-inquiry" />
           <input type="text" name="bot-field" className="hidden" tabIndex={-1} autoComplete="off" />
         </form>
 
         {/* Form */}
         <form onSubmit={handleSubmit} id="contact-form" className="flex-1 overflow-y-auto pr-2 mb-6" noValidate>
-          <input type="hidden" name="form-name" value="contact" />
+          <input type="hidden" name="form-name" value="cleanify-inquiry" />
           <div className="space-y-4">
             {/* Name */}
             <div>
