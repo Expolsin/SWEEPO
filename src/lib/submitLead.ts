@@ -1,4 +1,4 @@
-/** Lead submission adapter - backend-free integration point */
+/** Lead submission adapter - Netlify Forms integration */
 
 export interface LeadData {
   propertyType: 'apartment' | 'house';
@@ -23,47 +23,49 @@ export interface SubmitResult {
 }
 
 /**
- * Submit a cleaning request using Netlify Forms.
- * Netlify detects the static HTML blueprint in index.html at deployment time.
- * A successful server response is required before showing the thank-you screen.
+ * Submit lead to Netlify Forms.
+ *
+ * This uses the standard Netlify Forms endpoint which works on static deploys.
+ * The form must have `data-netlify="true"` and a hidden input with `name="form-name"`
+ * matching the form name configured in Netlify (here: "contact").
  */
 export async function submitLead(data: LeadData): Promise<SubmitResult> {
-  // Vite's local dev server does not process Netlify Forms, so never
-  // falsely report success when testing without a deployed Netlify site.
-  if (import.meta.env.DEV || ['localhost', '127.0.0.1'].includes(window.location.hostname)) {
-    return {
-      success: false,
-      error: 'Odesílání poptávek lze otestovat až na zveřejněném webu Netlify.',
-    };
-  }
-
-  const payload = new URLSearchParams({
-    'form-name': 'cleanify-inquiry',
-    ...Object.fromEntries(
-      Object.entries(data).map(([key, value]) => [key, String(value)])
-    ),
-    'bot-field': '',
-  });
-
   try {
-    const response = await fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: payload.toString(),
+    const formData = new FormData();
+    formData.append('form-name', 'contact');
+    Object.entries(data).forEach(([key, value]) => {
+      formData.append(key, String(value));
     });
 
-    if (!response.ok) {
-      return {
-        success: false,
-        error: 'Poptávku se nepodařilo doručit. Zkuste to prosím znovu.',
-      };
+    const response = await fetch('/', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      return { success: true };
     }
 
-    return { success: true };
-  } catch {
+    // Try to parse error response
+    let errorMessage = 'Odeslání se nezdařilo. Zkuste to prosím znovu.';
+    try {
+      const errorData = await response.json();
+      if (errorData.message) {
+        errorMessage = errorData.message;
+      }
+    } catch {
+      // Ignore parse errors
+    }
+
+    return { success: false, error: errorMessage };
+  } catch (err) {
+    console.error('Lead submission error:', err);
     return {
       success: false,
-      error: 'Spojení se nezdařilo. Zkontrolujte internet a zkuste to znovu.',
+      error: 'Nepodařilo se odeslat poptávku. Zkontrolujte připojení k internetu a zkuste to znovu.',
     };
   }
 }

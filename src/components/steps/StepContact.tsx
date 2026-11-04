@@ -50,7 +50,7 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
     setErrors(prev => ({ ...prev, [field]: error }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Validate all fields
@@ -75,36 +75,40 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
   };
 
   return (
-    <div className="min-h-screen flex flex-col px-[20px] pt-24 pb-16 screen-transition">
+    <div className="min-h-screen flex flex-col px-[24px] pt-24 pb-16 screen-transition bg-white">
       <div className="max-w-md w-full flex-1 flex flex-col">
         {/* Header */}
         <div className="mb-8">
-          <h2 className="font-display text-3xl font-semibold text-ink leading-tight text-balance">
+          <h2 className="font-display text-3xl font-semibold text-navy leading-tight text-balance">
             Kam máme dojet?
           </h2>
-          <p className="mt-2 text-ink/50">Potřebujeme jen to nejdůležitější. Volat vás budeme pro potvrzení.</p>
+          <p className="mt-2 text-navy/50">Potřebujeme jen to nejdůležitější. Volat vás budeme pro potvrzení.</p>
         </div>
+
+        {/* Netlify Forms hidden form for detection */}
+        <form name="contact" data-netlify="true" netlify-honeypot="bot-field" className="hidden" aria-hidden="true">
+          <input type="hidden" name="form-name" value="contact" />
+          <input type="text" name="bot-field" className="hidden" tabIndex={-1} autoComplete="off" />
+        </form>
 
         {/* Form */}
         <form onSubmit={handleSubmit} id="contact-form" className="flex-1 overflow-y-auto pr-2 mb-6" noValidate>
+          <input type="hidden" name="form-name" value="contact" />
           <div className="space-y-4">
             {/* Name */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-ink/70 mb-2">
+              <label htmlFor="name" className="block text-sm font-medium text-navy/70 mb-2">
                 Jméno a příjmení *
               </label>
               <input
                 id="name"
+                name="name"
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
                 onBlur={(e) => handleBlur('name', e.target.value)}
                 placeholder="Jan Novák"
-                className={`w-full px-4 py-3 card-radius border-2 tap-target font-ui text-base ${
-                  errors.name
-                    ? 'border-red-500 bg-red-50 focus:border-red-500'
-                    : 'border-ink/10 bg-white focus:border-forest'
-                } transition-colors`}
+                className={`w-full input-premium ${errors.name ? 'input-error' : ''}`}
                 aria-invalid={errors.name ? 'true' : 'false'}
                 aria-describedby={errors.name ? 'name-error' : undefined}
                 autoComplete="name"
@@ -116,21 +120,18 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
 
             {/* Phone */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-ink/70 mb-2">
+              <label htmlFor="phone" className="block text-sm font-medium text-navy/70 mb-2">
                 Telefon *
               </label>
               <input
                 id="phone"
+                name="phone"
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleChange('phone', e.target.value)}
                 onBlur={(e) => handleBlur('phone', e.target.value)}
                 placeholder="+420 123 456 789"
-                className={`w-full px-4 py-3 card-radius border-2 tap-target font-ui text-base ${
-                  errors.phone
-                    ? 'border-red-500 bg-red-50 focus:border-red-500'
-                    : 'border-ink/10 bg-white focus:border-forest'
-                } transition-colors`}
+                className={`w-full input-premium ${errors.phone ? 'input-error' : ''}`}
                 aria-invalid={errors.phone ? 'true' : 'false'}
                 aria-describedby={errors.phone ? 'phone-error' : undefined}
                 autoComplete="tel"
@@ -143,21 +144,18 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
 
             {/* Street */}
             <div>
-              <label htmlFor="street" className="block text-sm font-medium text-ink/70 mb-2">
+              <label htmlFor="street" className="block text-sm font-medium text-navy/70 mb-2">
                 Ulice *
               </label>
               <input
                 id="street"
+                name="street"
                 type="text"
                 value={formData.street}
                 onChange={(e) => handleChange('street', e.target.value)}
                 onBlur={(e) => handleBlur('street', e.target.value)}
                 placeholder="Vodičkova"
-                className={`w-full px-4 py-3 card-radius border-2 tap-target font-ui text-base ${
-                  errors.street
-                    ? 'border-red-500 bg-red-50 focus:border-red-500'
-                    : 'border-ink/10 bg-white focus:border-forest'
-                } transition-colors`}
+                className={`w-full input-premium ${errors.street ? 'input-error' : ''}`}
                 aria-invalid={errors.street ? 'true' : 'false'}
                 aria-describedby={errors.street ? 'street-error' : undefined}
                 autoComplete="street-address"
@@ -170,21 +168,18 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
             {/* House number + District */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label htmlFor="houseNumber" className="block text-sm font-medium text-ink/70 mb-2">
+                <label htmlFor="houseNumber" className="block text-sm font-medium text-navy/70 mb-2">
                   Číslo popisné *
                 </label>
                 <input
                   id="houseNumber"
+                  name="houseNumber"
                   type="text"
                   value={formData.houseNumber}
                   onChange={(e) => handleChange('houseNumber', e.target.value)}
                   onBlur={(e) => handleBlur('houseNumber', e.target.value)}
                   placeholder="123"
-                  className={`w-full px-4 py-3 card-radius border-2 tap-target font-ui text-base ${
-                    errors.houseNumber
-                      ? 'border-red-500 bg-red-50 focus:border-red-500'
-                      : 'border-ink/10 bg-white focus:border-forest'
-                  } transition-colors`}
+                  className={`w-full input-premium ${errors.houseNumber ? 'input-error' : ''}`}
                   aria-invalid={errors.houseNumber ? 'true' : 'false'}
                   aria-describedby={errors.houseNumber ? 'houseNumber-error' : undefined}
                   autoComplete="address-line2"
@@ -196,19 +191,16 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
               </div>
 
               <div>
-                <label htmlFor="district" className="block text-sm font-medium text-ink/70 mb-2">
+                <label htmlFor="district" className="block text-sm font-medium text-navy/70 mb-2">
                   Městská část *
                 </label>
                 <select
                   id="district"
+                  name="district"
                   value={formData.district}
                   onChange={(e) => handleChange('district', e.target.value)}
                   onBlur={(e) => handleBlur('district', e.target.value)}
-                  className={`w-full px-4 py-3 card-radius border-2 tap-target font-ui text-base appearance-none bg-white ${
-                    errors.district
-                      ? 'border-red-500 bg-red-50 focus:border-red-500'
-                      : 'border-ink/10 focus:border-forest'
-                  } transition-colors`}
+                  className={`w-full select-premium ${errors.district ? 'input-error' : ''}`}
                   aria-invalid={errors.district ? 'true' : 'false'}
                   aria-describedby={errors.district ? 'district-error' : undefined}
                 >
@@ -222,6 +214,17 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
                 )}
               </div>
             </div>
+
+            {/* Hidden fields for additional data */}
+            <input type="hidden" name="propertyType" value={formData.propertyType || ''} />
+            <input type="hidden" name="size" value={formData.size || ''} />
+            <input type="hidden" name="sizeM2" value={formData.sizeM2 || ''} />
+            <input type="hidden" name="frequency" value={formData.frequency || ''} />
+            <input type="hidden" name="windows" value={String(formData.windows)} />
+            <input type="hidden" name="ovens" value={String(formData.ovens)} />
+            <input type="hidden" name="ironingHours" value={String(formData.ironingHours)} />
+            <input type="hidden" name="preferredDate" value={formData.preferredDate || ''} />
+            <input type="hidden" name="submittedAt" value={new Date().toISOString()} />
 
             {/* Submit error */}
             {submitError && (
@@ -238,23 +241,23 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
         </form>
 
         {/* Order summary */}
-        <div className="mb-6 p-4 bg-white border border-ink/10 card-radius">
-          <h3 className="font-ui font-semibold text-ink mb-3">Shrnutí poptávky</h3>
-          <div className="space-y-2 text-sm text-ink/70">
+        <div className="mb-6 p-4 card">
+          <h3 className="font-ui font-semibold text-navy mb-3">Shrnutí poptávky</h3>
+          <div className="space-y-2 text-sm text-navy/70">
             <div className="flex justify-between">
-              <span className="text-ink/50">Typ:</span>
+              <span className="text-navy/50">Typ:</span>
               <span className="font-medium capitalize">{formData.propertyType === 'apartment' ? 'Byt' : 'Dům'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-ink/50">Velikost:</span>
+              <span className="text-navy/50">Velikost:</span>
               <span className="font-medium">{formData.size || 'Nevím'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-ink/50">Četnost:</span>
+              <span className="text-navy/50">Četnost:</span>
               <span className="font-medium capitalize">{formData.frequency === 'oneoff' ? 'Jednorázově' : 'Pravidelně'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-ink/50">Termín:</span>
+              <span className="text-navy/50">Termín:</span>
               <span className="font-medium">
                 {formData.preferredDate
                   ? new Date(formData.preferredDate).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long' })
@@ -262,7 +265,7 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-ink/50">Adresa:</span>
+              <span className="text-navy/50">Adresa:</span>
               <span className="font-medium">
                 {formData.street} {formData.houseNumber}, {formData.district}
               </span>
@@ -276,10 +279,8 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
             type="submit"
             form="contact-form"
             disabled={isSubmitting}
-            className="w-full cta-button font-ui font-semibold text-lg rounded-card tap-target transition-all duration-200 active:scale-[0.98] focus-visible:outline-lime focus-visible:outline-3 focus-visible:outline-offset-2 ${
-              isSubmitting
-                ? 'bg-ink/30 text-ink/50 cursor-wait'
-                : 'bg-forest text-white'
+            className="w-full cta-primary pressable font-ui font-semibold text-lg rounded-card tap-target ${
+              isSubmitting ? 'opacity-50 cursor-wait' : ''
             }"
           >
             {isSubmitting ? 'Odesílám...' : 'Odeslat nezávaznou poptávku'}
@@ -288,7 +289,7 @@ export function StepContact({ formData, dispatch, onSubmit, isSubmitting, submit
             type="button"
             onClick={() => dispatch({ type: 'PREV_STEP' })}
             disabled={isSubmitting}
-            className="w-full py-3 text-ink/60 font-ui font-medium text-center hover:text-ink transition-colors disabled:opacity-50"
+            className="w-full cta-secondary pressable font-ui font-medium text-base rounded-card tap-target"
           >
             Zpět
           </button>

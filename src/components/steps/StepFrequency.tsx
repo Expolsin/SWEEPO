@@ -1,6 +1,8 @@
-/** Frequency selection step */
+/** Premium Frequency selection step */
 
 import type { FormData, FormAction } from '../../types/form';
+import { SelectionCard } from '../ui/SelectionCard';
+import { NoteBox } from '../ui/SelectionCard';
 
 interface StepFrequencyProps {
   formData: FormData;
@@ -13,12 +15,22 @@ const frequencyOptions = [
     label: 'Jednorázově',
     description: 'Jednorázové úklid — např. před přestěhováním, po svatbě',
     priceNote: '350 Kč / hodina',
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+    ),
   },
   {
     value: 'recurring' as const,
     label: 'Pravidelně',
     description: 'Týdenně, 14denně nebo měsíčně — dle dohody',
     priceNote: '320 Kč / hodina (slevové sazby)',
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+    ),
   },
 ];
 
@@ -31,76 +43,54 @@ export function StepFrequency({ formData, dispatch }: StepFrequencyProps) {
   const isSelected = (value: 'oneoff' | 'recurring') => formData.frequency === value;
 
   return (
-    <div className="min-h-screen flex flex-col px-[20px] pt-24 pb-16 screen-transition">
-      <div className="max-w-md w-full flex-1 flex flex-col">
+    <div className="min-h-screen flex flex-col px-[24px] pt-20 pb-16 bg-white">
+      <div className="max-w-md w-full mx-auto flex-1 flex flex-col">
         {/* Header */}
-        <div className="mb-8">
-          <h2 className="font-display text-3xl font-semibold text-ink leading-tight text-balance">
+        <div className="mb-10 stagger-in">
+          <h2 className="font-display text-3xl sm:text-4xl font-semibold text-navy leading-tight text-balance">
             Jak často?
           </h2>
-          <p className="mt-2 text-ink/50">Pravidelné úklidy mají výhodnější hodinovou sazbu.</p>
+          <p className="mt-3 text-navy/50 text-lg">Pravidelné úklidy mají výhodnější hodinovou sazbu.</p>
         </div>
 
         {/* Options */}
-        <div className="flex-1 flex flex-col gap-4">
+        <div className="flex-1 flex flex-col gap-4 stagger-in" style={{ animationDelay: '80ms' }}>
           {frequencyOptions.map((option) => (
-            <button
+            <SelectionCard
               key={option.value}
               onClick={() => handleSelect(option.value)}
-              className={`relative flex items-start gap-4 p-4 card-radius tap-target transition-all duration-200 border-2 ${
-                isSelected(option.value)
-                  ? 'border-forest bg-mint'
-                  : 'border-ink/10 bg-white hover:border-ink/20 active:scale-[0.99]'
-              }`}
+              selected={isSelected(option.value)}
+              icon={option.icon}
+              iconPosition="left"
               aria-pressed={isSelected(option.value)}
             >
-              <div
-                className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center mt-0.5 transition-all duration-200 ${
-                  isSelected(option.value)
-                    ? 'bg-forest text-white'
-                    : 'bg-ink/5 text-ink/40'
-                }`}
-              >
-                {option.value === 'oneoff' ? (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                ) : (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                )}
-              </div>
-              <div className="flex-1 text-left min-w-0">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-ui font-semibold text-lg text-ink">{option.label}</h3>
-                  <span className="text-sm font-medium text-forest whitespace-nowrap">{option.priceNote}</span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-4">
+                  <h3 className="font-ui font-semibold text-lg text-navy">{option.label}</h3>
+                  <span className="text-sm font-medium text-gold whitespace-nowrap flex-shrink-0">{option.priceNote}</span>
                 </div>
-                <p className="text-sm text-ink/50 mt-1">{option.description}</p>
+                <p className="text-sm text-navy/50 mt-1">{option.description}</p>
               </div>
-              {isSelected(option.value) && (
-                <svg className="w-6 h-6 text-forest flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                </svg>
-              )}
-            </button>
+            </SelectionCard>
           ))}
         </div>
 
-        {/* Info about minimum hours */}
-        <div className="mb-4 p-3 bg-mint/50 rounded-xl border border-mint/50">
-          <p className="text-sm text-forest text-center">
-            Minimální fakturovaná doba základního úklidu: 3 hodiny
-          </p>
+        {/* Minimum hours note */}
+        <div className="mb-6 stagger-in" style={{ animationDelay: '180ms' }}>
+          <NoteBox type="info">
+            <span className="font-medium">Minimální fakturovaná doba základního úklidu: 3 hodiny</span>
+          </NoteBox>
         </div>
 
         {/* Back button */}
-        <button
-          onClick={() => dispatch({ type: 'PREV_STEP' })}
-          className="w-full py-3 text-ink/60 font-ui font-medium text-center hover:text-ink transition-colors"
-        >
-          Zpět
-        </button>
+        <div className="stagger-in" style={{ animationDelay: '220ms' }}>
+          <button
+            onClick={() => dispatch({ type: 'PREV_STEP' })}
+            className="w-full cta-secondary pressable font-ui font-medium text-base rounded-card tap-target"
+          >
+            Zpět
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
-/** Size selection step */
+/** Premium Size selection step */
 
 import type { FormData, FormAction, SizeLabel } from '../../types/form';
+import { OptionCard, InputField } from '../ui/SelectionCard';
 
 interface StepSizeProps {
   formData: FormData;
@@ -14,7 +15,6 @@ const sizeOptions: { value: SizeLabel; label: string; description: string }[] = 
   { value: '3+kk', label: '3+kk', description: 'Tři pokoje s kuchyňským koutem' },
   { value: '3+1', label: '3+1', description: 'Tři pokoje a samostatná kuchyň' },
   { value: '4+', label: '4+', description: 'Čtyři a více pokojů' },
-  { value: 'unknown', label: 'Nevím', description: 'Určíme velikost při pohledu' },
 ];
 
 export function StepSize({ formData, dispatch }: StepSizeProps) {
@@ -30,14 +30,14 @@ export function StepSize({ formData, dispatch }: StepSizeProps) {
   const isSelected = (value: SizeLabel) => formData.size === value;
 
   return (
-    <div className="min-h-screen flex flex-col px-[20px] pt-24 pb-16 screen-transition">
-      <div className="max-w-md w-full flex-1 flex flex-col">
+    <div className="min-h-screen flex flex-col px-[24px] pt-20 pb-16 bg-white">
+      <div className="max-w-md w-full mx-auto flex-1 flex flex-col">
         {/* Header */}
-        <div className="mb-8">
-          <h2 className="font-display text-3xl font-semibold text-ink leading-tight text-balance">
+        <div className="mb-8 stagger-in">
+          <h2 className="font-display text-3xl sm:text-4xl font-semibold text-navy leading-tight text-balance">
             Jak velký prostor uklidíme?
           </h2>
-          <p className="mt-2 text-ink/50">
+          <p className="mt-3 text-navy/50 text-lg">
             {formData.propertyType === 'house'
               ? 'Pro domy je velikost jen orientační — upřesníme při pohledu.'
               : 'Vyberte rozvržení bytu. Pokud nejste si jistí, zvolte „Nevím“.'
@@ -46,80 +46,67 @@ export function StepSize({ formData, dispatch }: StepSizeProps) {
         </div>
 
         {/* Size options grid */}
-        <div className="flex-1 overflow-y-auto pr-2 mb-6">
+        <div className="flex-1 overflow-y-auto pr-2 mb-6 stagger-in" style={{ animationDelay: '60ms' }}>
           <div className="grid grid-cols-2 gap-3 mb-6">
-            {sizeOptions.slice(0, 6).map((option) => (
-              <button
+            {sizeOptions.map((option) => (
+              <OptionCard
                 key={option.value}
                 onClick={() => handleSelect(option.value)}
-                className={`relative p-4 card-radius tap-target transition-all duration-200 border-2 text-center ${
-                  isSelected(option.value)
-                    ? 'border-forest bg-mint'
-                    : 'border-ink/10 bg-white hover:border-ink/20 active:scale-[0.99]'
-                }`}
+                selected={isSelected(option.value)}
                 aria-pressed={isSelected(option.value)}
               >
-                <h3 className="font-ui font-semibold text-base text-ink">{option.label}</h3>
-                <p className="text-xs text-ink/50 mt-1 line-clamp-2">{option.description}</p>
-                {isSelected(option.value) && (
-                  <svg className="w-5 h-5 text-forest mx-auto mt-2" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                  </svg>
-                )}
-              </button>
+                <h3 className="font-ui font-semibold text-base text-navy">{option.label}</h3>
+                <p className="text-xs text-navy/50 mt-1.5 line-clamp-2">{option.description}</p>
+              </OptionCard>
             ))}
           </div>
 
           {/* "Nevím" option - full width */}
-          <button
+          <OptionCard
             onClick={() => handleSelect('unknown')}
-            className={`w-full p-4 card-radius tap-target transition-all duration-200 border-2 text-center ${
-              isSelected('unknown')
-                ? 'border-forest bg-mint'
-                : 'border-ink/10 bg-white hover:border-ink/20 active:scale-[0.99]'
-            }`}
+            selected={isSelected('unknown')}
             aria-pressed={isSelected('unknown')}
+            className="flex items-center justify-center gap-3 text-left p-4"
           >
-            <div className="flex items-center justify-center gap-2">
-              <svg className="w-5 h-5 text-ink/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.5-3.146 2.5-1.463 0-2.5-.983-2.788-2.116M11 9c0 1.5-1.5 3-3 3s-3-1.5-3-3 1.5-3 3-3 3 1.5 3 3z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
-              </svg>
-              <span className="font-ui font-medium text-ink">Nevím přesnou velikost</span>
-            </div>
-            {isSelected('unknown') && (
-              <svg className="w-5 h-5 text-forest mx-auto mt-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-              </svg>
-            )}
-          </button>
+            <svg className="w-5 h-5 text-navy/40 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.5-3.146 2.5-1.463 0-2.5-.983-2.788-2.116M11 9c0 1.5-1.5 3-3 3s-3-1.5-3-3 1.5-3 3-3 3 1.5 3 3z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9z" />
+            </svg>
+            <span className="font-ui font-medium text-navy">Nevím přesnou velikost</span>
+          </OptionCard>
         </div>
 
         {/* Optional m² input */}
-        <div className="mb-6">
-          <label htmlFor="size-m2" className="block text-sm font-medium text-ink/70 mb-2">
-            Volitelně: výměra v m²
-          </label>
-          <input
-            id="size-m2"
-            type="number"
-            min="10"
-            max="500"
-            value={formData.sizeM2}
-            onChange={handleM2Change}
-            placeholder="např. 65"
-            className="w-full px-4 py-3 card-radius border-2 border-ink/10 bg-white text-ink placeholder-ink/30 font-ui text-base tap-target focus:border-forest focus:outline-none transition-colors"
-            inputMode="numeric"
-          />
+        <div className="mb-6 stagger-in" style={{ animationDelay: '140ms' }}>
+          <InputField
+            label="Volitelně: výměra v m²"
+            error={undefined}
+            required={false}
+            htmlFor="size-m2"
+          >
+            <input
+              id="size-m2"
+              type="number"
+              min="10"
+              max="500"
+              value={formData.sizeM2}
+              onChange={handleM2Change}
+              placeholder="např. 65"
+              className="input-premium"
+              inputMode="numeric"
+            />
+          </InputField>
         </div>
 
         {/* Back button */}
-        <button
-          onClick={() => dispatch({ type: 'PREV_STEP' })}
-          className="w-full py-3 text-ink/60 font-ui font-medium text-center hover:text-ink transition-colors"
-        >
-          Zpět
-        </button>
+        <div className="stagger-in" style={{ animationDelay: '200ms' }}>
+          <button
+            onClick={() => dispatch({ type: 'PREV_STEP' })}
+            className="w-full cta-secondary pressable font-ui font-medium text-base rounded-card tap-target"
+          >
+            Zpět
+          </button>
+        </div>
       </div>
     </div>
   );

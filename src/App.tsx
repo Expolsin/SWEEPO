@@ -68,7 +68,7 @@ function App() {
 
     switch (step) {
       case 0:
-        return <StepHero formData={formData} dispatch={dispatch} />;
+        return <StepHero dispatch={dispatch} />;
       case 1:
         return <StepProperty formData={formData} dispatch={dispatch} />;
       case 2:
@@ -92,12 +92,12 @@ function App() {
           />
         );
       default:
-        return <StepHero formData={formData} dispatch={dispatch} />;
+        return <StepHero dispatch={dispatch} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-ivory">
+    <div className="min-h-screen bg-white">
       {/* Progress bar - only show after hero */}
       {formData.currentStep > 0 && !formData.submitSuccess && (
         <ProgressBar formData={formData} />

@@ -118,37 +118,37 @@ export function StepDate({ formData, dispatch }: StepDateProps) {
   const days = useMemo(() => daysInMonth(currentMonth), [daysInMonth, currentMonth]);
 
   return (
-    <div className="min-h-screen flex flex-col px-[20px] pt-24 pb-16 screen-transition">
+    <div className="min-h-screen flex flex-col px-[24px] pt-24 pb-16 screen-transition bg-white">
       <div className="max-w-md w-full flex-1 flex flex-col">
         {/* Header */}
         <div className="mb-8">
-          <h2 className="font-display text-3xl font-semibold text-ink leading-tight text-balance">
+          <h2 className="font-display text-3xl font-semibold text-navy leading-tight text-balance">
             Kdy vám vyhovuje?
           </h2>
-          <p className="mt-2 text-ink/50">Vyberte preferovaný den. Termín potvrdíme dopředu.</p>
+          <p className="mt-2 text-navy/50">Vyberte preferovaný den. Termín potvrdíme dopředu.</p>
         </div>
 
         {/* Calendar */}
         <div className="flex-1 overflow-y-auto pr-2 mb-6">
-          <div className="bg-white border border-ink/10 card-radius p-4">
+          <div className="card p-4">
             {/* Month header */}
             <div className="flex items-center justify-between mb-4">
               <button
                 onClick={handlePrevMonth}
                 disabled={currentMonth.getTime() <= todayMonthStartTimestamp}
-                className="p-2 rounded-xl text-ink/50 hover:bg-ink/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="p-2 rounded-xl text-navy/50 hover:bg-marble-bg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 aria-label="Předchozí měsíc"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
-              <h3 className="font-ui font-semibold text-lg text-ink">
+              <h3 className="font-ui font-semibold text-lg text-navy">
                 {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
               </h3>
               <button
                 onClick={handleNextMonth}
-                className="p-2 rounded-xl text-ink/50 hover:bg-ink/5 transition-colors"
+                className="p-2 rounded-xl text-navy/50 hover:bg-marble-bg transition-colors"
                 aria-label="Další měsíc"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,7 +160,7 @@ export function StepDate({ formData, dispatch }: StepDateProps) {
             {/* Day names */}
             <div className="grid grid-cols-7 gap-1 mb-2">
               {dayNames.map((day) => (
-                <div key={day} className="text-center text-xs font-medium text-ink/40 py-2">
+                <div key={day} className="text-center text-xs font-medium text-navy/40 py-2">
                   {day}
                 </div>
               ))}
@@ -175,12 +175,12 @@ export function StepDate({ formData, dispatch }: StepDateProps) {
                   disabled={isPast(day) || !isCurrentMonth(day)}
                   className={`aspect-square rounded-xl text-sm font-medium transition-all duration-150 ${
                     isSelected(day)
-                      ? 'bg-forest text-white'
+                      ? 'bg-navy text-white'
                       : isPast(day) || !isCurrentMonth(day)
-                      ? 'text-ink/20 cursor-not-allowed'
+                      ? 'text-navy/20 cursor-not-allowed'
                       : isTodayDate(day)
-                      ? 'text-forest font-semibold ring-2 ring-forest/50'
-                      : 'text-ink/70 hover:bg-ink/5 active:bg-ink/10'
+                      ? 'text-navy font-semibold ring-2 ring-navy/30'
+                      : 'text-navy/70 hover:bg-marble-bg active:bg-marble-vein/30'
                   }`}
                   aria-selected={isSelected(day)}
                   aria-disabled={isPast(day) || !isCurrentMonth(day)}
@@ -194,18 +194,18 @@ export function StepDate({ formData, dispatch }: StepDateProps) {
 
           {/* Selected date display */}
           {selectedDate && (
-            <div className="mt-4 p-4 bg-mint border border-mint/50 card-radius">
+            <div className="mt-4 p-4 bg-marble-bg border border-marble-vein card-radius">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <svg className="w-6 h-6 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2v12a2 2 0 002 2z" />
                   </svg>
-                  <span className="font-ui font-medium text-ink">
+                  <span className="font-ui font-medium text-navy">
                     Vybráno: {new Date(selectedDate).toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                   </span>
                 </div>
               </div>
-              <p className="text-sm text-ink/50 mt-2">
+              <p className="text-sm text-navy/50 mt-2">
                 Toto je preferovaný termín. Konkrétní čas domluvíme při potvrzování.
               </p>
             </div>
@@ -217,17 +217,17 @@ export function StepDate({ formData, dispatch }: StepDateProps) {
           <button
             onClick={handleNext}
             disabled={!selectedDate}
-            className="w-full cta-button font-ui font-semibold text-lg rounded-card tap-target transition-all duration-200 active:scale-[0.98] focus-visible:outline-lime focus-visible:outline-3 focus-visible:outline-offset-2 ${
+            className="w-full cta-primary pressable font-ui font-semibold text-lg rounded-card tap-target ${
               selectedDate
-                ? 'bg-forest text-white'
-                : 'bg-ink/10 text-ink/30 cursor-not-allowed'
+                ? ''
+                : 'opacity-40 cursor-not-allowed'
             }"
           >
             Pokračovat
           </button>
           <button
             onClick={() => dispatch({ type: 'PREV_STEP' })}
-            className="w-full py-3 text-ink/60 font-ui font-medium text-center hover:text-ink transition-colors"
+            className="w-full cta-secondary pressable font-ui font-medium text-base rounded-card tap-target"
           >
             Zpět
           </button>
