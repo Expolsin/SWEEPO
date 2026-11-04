@@ -27,12 +27,12 @@ export interface SubmitResult {
  *
  * This uses the standard Netlify Forms endpoint which works on static deploys.
  * The form must have `data-netlify="true"` and a hidden input with `name="form-name"`
- * matching the form name configured in Netlify (here: "contact").
+ * matching the registered Netlify form name ("cleanify-inquiry").
  */
 export async function submitLead(data: LeadData): Promise<SubmitResult> {
   try {
     const formData = new FormData();
-    formData.append('form-name', 'contact');
+    formData.append('form-name', 'cleanify-inquiry');
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, String(value));
     });
